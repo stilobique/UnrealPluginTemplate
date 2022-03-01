@@ -1,0 +1,74 @@
+name: Create base release
+
+on:
+  workflow_call:
+    outputs:
+      version_type:
+        description: "Give the bump type for this release"
+        value: ${{ jobs.init-release-data.outputs.version_type }}
+      version_number:
+        description: "String about the tag version, integer only"
+        value: ${{ jobs.init-release-data.outputs.version_number }}
+      version_draft:
+        description: "Boolean if the release are draft or not"
+        value: ${{ jobs.init-release-data.outputs.version_draft }}
+      version_name:
+        description: "Number version with a prefix v."
+        value: v${{ jobs.init-release-data.outputs.version_name }}
+
+jobs:
+  init-release-data:
+    name: Initialize all data about the package
+    runs-on: ubuntu-latest
+    outputs:
+      version_type: ${{ steps.bump_setup.outputs.type }}
+      version_number: ${{ steps.semantic_setup.outputs.version }}
+      version_draft: ${{ steps.semantic_setup.outputs.draft }}
+      version_name: ${{ steps.semantic_setup.outputs.version }}
+    steps:
+      - name: Setup bump release
+        id: bump_setup
+        run: |
+          if [ ${{ contains(github.event.pull_request.labels.*.name, 'release:major') }} == true ]; then
+            echo "::set-output name=type::major"
+          elif [ ${{ contains(github.event.pull_request.labels.*.name, 'release:minor') }} == true ]; then
+            echo "::set-output name=type::minor"
+          else
+            echo "::set-output name=type::patch"
+          fi
+
+      - name: Get the Semantic tag Version
+        id: get_semantic_setup
+        uses: oprypin/find-latest-tag@v1.1.0
+        with:
+          repository: ${{ github.repository }}
+          releases-only: true
+          prefix: 'v'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Increment if a new release are needed to generated
+        if: ${{ github.event.action == 'opened' }}
+        id: new_semantic_setup
+        uses: zwaldowski/semver-release-action@v2
+        with:
+          bump: ${{ steps.bump_setup.outputs.type }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+
+      - name: From all use case, get the Tag version
+        id: semantic_setup
+        run: |
+          tag=${{ steps.get_semantic_setup.outputs.tag }}
+          if [ "${{ github.event.action }}" == "closed" ]; then
+            echo "Close the pull request, get the previous tag"
+            echo "::set-output name=version::${tag:1}"
+            echo "::set-output name=draft::false"
+          elif [ "${{ github.event.action }}" == "opened" ]; then
+            echo "Create a new tag from a new pull request"
+            echo "::set-output name=version::${{ steps.new_semantic_setup.outputs.version }}"
+            echo "::set-output name=draft::true"
+          else
+            echo "Update the pull request, keep the tag value"
+            echo "::set-output name=version::${tag:1}"
+            echo "::set-output name=draft::true"
+          fi
