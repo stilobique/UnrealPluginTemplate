@@ -1,0 +1,53 @@
+name: Create Unreal plugin release
+
+on:
+  pull_request:
+    branches:
+      [main]
+    types:
+      [opened, edited, synchronize, closed]
+
+
+jobs:
+  init-release-data:
+    name: Initialize all data about the package
+    uses: Moderlab-Production/UnrealPluginTemplate/.github/workflows/initialyse_data.yml@main
+
+  prepare-first-release:
+    name: Make the pre-release
+    needs: init-release-data
+    uses: Moderlab-Production/UnrealPluginTemplate/.github/workflows/generate_release.yml@main
+    with:
+      bump_version: ${{ needs.init-release-data.outputs.version_type }}
+
+  unit-test:
+    uses: Moderlab-Production/UnrealPluginTemplate/.github/workflows/unit_test.yml@main
+
+  release-package:
+    name: Generate archive package
+    needs:
+      - init-release-data
+      - prepare-first-release
+      - unit-test
+    uses: Moderlab-Production/UnrealPluginTemplate/.github/workflows/package.yml@main
+    with:
+      num_version: ${{ needs.init-release-data.outputs.version_number }}
+      name_version: ${{ needs.init-release-data.outputs.version_name }}
+      draft_version: ${{ needs.init-release-data.outputs.version_draft }}
+
+  publish-release:
+    name: Publish the Github Release
+    needs:
+      - init-release-data
+      - release-package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update/Publish the release
+        uses: tubone24/update_release@v1.3.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ needs.init-release-data.outputs.version_name }}
+        with:
+          release_name: ${{ needs.init-release-data.outputs.version_name }}
+          body: ''
+          prerelease: ${{ needs.init-release-data.outputs.version_draft }}
