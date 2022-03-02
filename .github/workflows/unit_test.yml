@@ -10,6 +10,11 @@ on:
 
 jobs:
   unit-test:
+    container:
+      image: ghcr.io/epicgames/unreal-engine
+      credentials:
+        username: stilobique
+        password: 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
     name: Unit Test
     runs-on: ubuntu-latest
     steps:
