@@ -1,0 +1,6 @@
+{
+  "unreal": {
+    "unreal-type": ["unreal_type.zip", "Moderlab-Production/UnrealType"],
+    "unreal-pipeline": ["unreal_pipeline.zip", "Moderlab-Production/UnrealPipeline"]
+  }
+}
