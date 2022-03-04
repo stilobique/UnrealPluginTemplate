@@ -49,7 +49,7 @@ class ContainerObject(object):
             cmds.append(str(PurePosixPath(self.local_folder, "tests", "launch_test_b3d.sh")))
         else:
             cmds.append(str(PurePosixPath(self.local_folder, "tests", "launch_test_ue.sh")))
-            cmds.append(str(PurePosixPath(self.local_folder, "tests", "unreal_sample", "empty_project",
+            cmds.append(str(PurePosixPath(self.local_folder, "tests", "ue_sample", "empty_project",
                                           "EmptyProject.uproject")))
 
         return cmds

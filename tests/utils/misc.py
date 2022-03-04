@@ -43,7 +43,7 @@ def install_all_plugins(plugin: str, archives: [str]):
             f.extractall(Path(os.getcwd(), 'tests', 'plugins'))
 
     # TODO Add plugin in hard code, write an automatised way
-    distant = Path(os.getcwd(), 'tests', 'unreal_sample', 'empty_project', 'Plugins')
+    distant = Path(os.getcwd(), 'tests', 'ue_sample', 'empty_project', 'Plugins')
     if distant.exists():
         shutil.rmtree(distant)
     shutil.copytree(Path(os.getcwd(), 'tests', 'plugins'), distant)
@@ -65,7 +65,7 @@ def clean_folders_and_archives(archives: list):
     clean_plugin_folder()
 
     # TODO Remove with an hardcode way the plugin with the Unreal sample
-    shutil.rmtree(Path(os.getcwd(), 'tests', 'unreal_sample', 'empty_project', 'Plugins'))
+    shutil.rmtree(Path(os.getcwd(), 'tests', 'ue_sample', 'empty_project', 'Plugins'))
     for archive in archives:
         if Path(Path(os.getcwd(), archive)).exists():
             os.remove(Path(os.getcwd(), archive))
