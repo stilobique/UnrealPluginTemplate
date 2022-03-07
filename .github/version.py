@@ -9,7 +9,7 @@ from pathlib import Path
 class SetupVersion:
     def __init__(self, version: str):
         self.addon_file = Path(self.get_plugin_file())
-        self.tag = version
+        self.tag = version.replace('--tag=', '')
         self.update_addon_init()
 
     def update_addon_init(self):
