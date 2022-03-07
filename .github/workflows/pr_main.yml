@@ -20,15 +20,15 @@ jobs:
     with:
       bump_version: ${{ needs.init-release-data.outputs.version_type }}
 
-  unit-test:
-    uses: Moderlab-Production/UnrealPluginTemplate/.github/workflows/unit_test.yml@main
+#  unit-test:
+#    uses: Moderlab-Production/UnrealPluginTemplate/.github/workflows/unit_test.yml@main
 
   release-package:
     name: Generate archive package
     needs:
       - init-release-data
       - prepare-first-release
-      - unit-test
+#      - unit-test
     uses: Moderlab-Production/UnrealPluginTemplate/.github/workflows/package.yml@main
     with:
       num_version: ${{ needs.init-release-data.outputs.version_number }}
