@@ -40,7 +40,7 @@ jobs:
         run: python '.github/version.py' --tag=${{ inputs.num_version }}
 
       - name: Debug draft info
-        uses: |
+        run: |
           echo show draft input entry "${{ inputs.draft_version }}"
           echo test conditional entry "${{ inputs.draft_version == false }}"
           echo test conditional entry "${{ inputs.draft_version == true }}"
