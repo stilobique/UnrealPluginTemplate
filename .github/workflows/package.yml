@@ -39,14 +39,6 @@ jobs:
       - name: Change version number in the .uplugin file
         run: python '.github/version.py' --tag=${{ inputs.num_version }}
 
-      - name: Debug draft info
-        run: |
-          echo show draft input entry "${{ inputs.draft_version }}"
-          echo test conditional entry "${{ inputs.draft_version == false }}"
-          echo test conditional entry "${{ inputs.draft_version == true }}"
-          echo test conditional entry "${{ inputs.draft_version == 'false' }}"
-          echo test conditional entry "${{ inputs.draft_version == 'true' }}"
-
       - name: Commit the previous update
         uses: actions-js/push@v1.3
         if: ${{ inputs.draft_version == 'false' }}
