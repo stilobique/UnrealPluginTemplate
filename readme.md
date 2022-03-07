@@ -3,8 +3,8 @@
 
 # Unreal Plugin Template
 This repository is a template to make a new Unreal Engine plugin (blueprint only), with a full CI/CD chain 
-functional. All Unit Test work with Python (WIP ❌), some engine plugins are request to be operational, is request 
-with the plugin activation.
+functional (WIP ❌). All Unit Test work with Python and blueprint, some engine plugins are request to be 
+operational, is request with the plugin activation.
 
 
 |         Plugins 	         |
@@ -12,3 +12,7 @@ with the plugin activation.
 | EditorScriptingUtilities	 |
 |    PythonScriptPlugin     |
 | PythonAutomationTest    	 |
+
+
+# Improvement
+Update this template with Unreal 4.27 (docker support) and Unreal 5
